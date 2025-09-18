@@ -8,14 +8,23 @@ import 'package:social/model/model.dart';
 import 'auth.dart';
 import 'signIn/signin_phone.dart';
 
-
 class SocialSignInPage extends StatelessWidget {
   final Widget imagelogo;
   final bool enableGoogle;
   final bool enablePhone;
   final bool enableEmail;
   final bool enableSkip;
-  final void Function(AuthUserData user)? onSignInSuccess; // ✅ new
+  final Color? backgroundColor;
+  final Color? phoneButtonColor;
+  final Color? googleButtonColor;
+  final Color? emailButtonColor;
+  final Color? skipButtonColor;
+
+  final Color? phoneTextColor;
+  final Color? googleTextColor;
+  final Color? emailTextColor;
+  final Color? skipTextColor;
+  final void Function(AuthUserData user)? onSignInSuccess;
 
   const SocialSignInPage({
     super.key,
@@ -24,14 +33,23 @@ class SocialSignInPage extends StatelessWidget {
     this.enablePhone = true,
     this.enableEmail = true,
     this.enableSkip = true,
-    this.onSignInSuccess, // ✅ new
+    this.backgroundColor,
+    this.phoneButtonColor,
+    this.googleButtonColor,
+    this.emailButtonColor,
+    this.skipButtonColor,
+    this.phoneTextColor,
+    this.googleTextColor,
+    this.emailTextColor,
+    this.skipTextColor,
+    this.onSignInSuccess,
   });
 
   Future<void> _onSignIn(String platform, BuildContext context) async {
     try {
       UserCredential? userCredential;
 
-           AuthUserData? authUser;
+      AuthUserData? authUser;
 
       switch (platform) {
         case 'Google':
@@ -134,10 +152,15 @@ class SocialSignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
+      backgroundColor:
+          backgroundColor ?? theme.colorScheme.primary, // root primary color
+
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -155,7 +178,9 @@ class SocialSignInPage extends StatelessWidget {
                   if (enablePhone) ...[
                     SocialButton(
                       text: 'Continue with Phone Number',
-                      color: Colors.blueAccent,
+                      // color: Colors.blueAccent,
+                      color: phoneButtonColor ?? theme.colorScheme.secondary,
+                      textColor: phoneTextColor ?? Colors.white,
                       icon: const Icon(Icons.phone, color: Colors.white),
                       onPressed: () => _onSignIn('Phone', context),
                     ),
@@ -165,7 +190,7 @@ class SocialSignInPage extends StatelessWidget {
                   if (enableGoogle) ...[
                     SocialButton(
                       text: 'Sign in with Google',
-                      color: Colors.black,
+                      color: googleButtonColor ?? Colors.black,
                       assetIcon: 'assets/google-removebg-preview.png',
                       onPressed: () => _onSignIn('Google', context),
                     ),
@@ -175,7 +200,7 @@ class SocialSignInPage extends StatelessWidget {
                   if (enableEmail) ...[
                     SocialButton(
                       text: 'Continue with Email',
-                      color: Colors.blueAccent,
+                      color: emailButtonColor ?? theme.colorScheme.secondary,
                       icon: const Icon(Icons.email, color: Colors.white),
                       onPressed: () => _onSignIn('Email', context),
                     ),
@@ -190,7 +215,8 @@ class SocialSignInPage extends StatelessWidget {
                     const SizedBox(height: 20),
                     SocialButton(
                       text: 'Sign up later',
-                      color: Colors.white10,
+
+                      color: skipButtonColor ?? Colors.grey.shade300,
                       icon: const Icon(
                         Icons.emoji_emotions,
                         color: Colors.black,
