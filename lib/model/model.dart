@@ -1,10 +1,10 @@
-import 'package:isar/isar.dart';
+// import 'package:isar/isar.dart';
 
-part 'model.g.dart';
+// part 'model.g.dart';
 
-@collection
+// @collection
 class AuthUserData {
-  Id id = Isar.autoIncrement;
+  // Id id = Isar.autoIncrement;
 
   String? uid;
   String? name;
