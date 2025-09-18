@@ -53,20 +53,31 @@ class SocialSignInPage extends StatelessWidget {
 
       switch (platform) {
         case 'Google':
-          userCredential = await AuthService().signInWithGoogle();
-          authUser = await AuthService().signInWithGoogle().then((userCred) {
-            final user = userCred!.user;
-            if (user != null) {
-              return AuthUserData.fromFirebaseUser(
-                uid: user.uid,
-                name: user.displayName,
-                email: user.email,
-                photoUrl: user.photoURL,
-                token: userCred.credential!.token.toString(),
-              );
-            }
-            return null;
-          });
+          try {
+            showLoadingDialog(context, message: "Signing in with Google...");
+
+            final userCredential = await AuthService().signInWithGoogle();
+
+            hideLoadingDialog(context); // hide when done
+
+            authUser = await AuthService().signInWithGoogle().then((userCred) {
+              final user = userCred!.user;
+              if (user != null) {
+                return AuthUserData.fromFirebaseUser(
+                  uid: user.uid,
+                  name: user.displayName,
+                  email: user.email,
+                  photoUrl: user.photoURL,
+                  token: userCred.credential!.token.toString(),
+                );
+              }
+              return null;
+            });
+          } catch (e) {
+            hideLoadingDialog(context);
+            _showError(context, "Google sign-in failed: $e");
+          }
+
           break;
         case 'Phone':
           Navigator.of(
@@ -232,6 +243,39 @@ class SocialSignInPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void showLoadingDialog(
+    BuildContext context, {
+    String message = "Signing in...",
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user can't dismiss while loading
+      builder: (_) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(width: 16),
+                Text(message),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void hideLoadingDialog(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop(); // close the dialog
   }
 }
 
