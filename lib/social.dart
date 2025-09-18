@@ -47,7 +47,6 @@ class SocialSignInPage extends StatelessWidget {
 
   Future<void> _onSignIn(String platform, BuildContext context) async {
     try {
-      UserCredential? userCredential;
 
       AuthUserData? authUser;
 
@@ -56,9 +55,8 @@ class SocialSignInPage extends StatelessWidget {
           try {
             showLoadingDialog(context, message: "Signing in with Google...");
 
-            final userCredential = await AuthService().signInWithGoogle();
 
-            hideLoadingDialog(context); // hide when done
+            // hide when done
 
             authUser = await AuthService().signInWithGoogle().then((userCred) {
               final user = userCred!.user;
@@ -73,6 +71,7 @@ class SocialSignInPage extends StatelessWidget {
               }
               return null;
             });
+             hideLoadingDialog(context);
           } catch (e) {
             hideLoadingDialog(context);
             _showError(context, "Google sign-in failed: $e");
