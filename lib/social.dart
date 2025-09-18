@@ -3,6 +3,7 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social/model/model.dart';
 
 import 'auth.dart';
 import 'signIn/signin_phone.dart';
@@ -10,11 +11,11 @@ import 'signIn/signin_phone.dart';
 
 class SocialSignInPage extends StatelessWidget {
   final Widget imagelogo;
-
   final bool enableGoogle;
   final bool enablePhone;
   final bool enableEmail;
   final bool enableSkip;
+  final void Function(AuthUserData user)? onSignInSuccess; // ✅ new
 
   const SocialSignInPage({
     super.key,
@@ -23,15 +24,31 @@ class SocialSignInPage extends StatelessWidget {
     this.enablePhone = true,
     this.enableEmail = true,
     this.enableSkip = true,
+    this.onSignInSuccess, // ✅ new
   });
 
   Future<void> _onSignIn(String platform, BuildContext context) async {
     try {
       UserCredential? userCredential;
 
+           AuthUserData? authUser;
+
       switch (platform) {
         case 'Google':
           userCredential = await AuthService().signInWithGoogle();
+          authUser = await AuthService().signInWithGoogle().then((userCred) {
+            final user = userCred!.user;
+            if (user != null) {
+              return AuthUserData.fromFirebaseUser(
+                uid: user.uid,
+                name: user.displayName,
+                email: user.email,
+                photoUrl: user.photoURL,
+                token: userCred.credential!.token.toString(),
+              );
+            }
+            return null;
+          });
           break;
         case 'Phone':
           Navigator.of(
@@ -56,6 +73,9 @@ class SocialSignInPage extends StatelessWidget {
       //   );
       // } else if (platform != 'Skip') {
       // }
+      if (authUser != null && onSignInSuccess != null) {
+        onSignInSuccess!(authUser);
+      }
     } catch (e) {
       _showError(context, 'Error: $e');
     }
