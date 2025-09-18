@@ -3,10 +3,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:social/model/model.dart';
 
-
-
 class AuthService {
-   Future<UserCredential?> signInWithGoogle() async {
+  Future<void> signOutGoogle() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    try {
+      await auth.signOut();
+
+      if (await googleSignIn.isSignedIn()) {
+        await googleSignIn.signOut();
+      }
+
+      log("Signed out successfully.");
+    } catch (e) {
+      log("Sign out error: $e");
+    }
+  }
+
+  Future<UserCredential?> signInWithGoogle() async {
     try {
       final googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) return null;
@@ -17,8 +32,9 @@ class AuthService {
         idToken: googleAuth.idToken,
       );
 
-      final userCred =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+      final userCred = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
 
       if (userCred.user != null) {
         AuthUserData userData = AuthUserData.fromFirebaseUser(
@@ -28,9 +44,11 @@ class AuthService {
           photoUrl: userCred.user!.photoURL,
           token: googleAuth.accessToken,
         );
-        log("User signed in: ${userData.name}, ${userData.email}, token: ${userData.token}");
+        log(
+          "User signed in: ${userData.name}, ${userData.email}, token: ${userData.token}",
+        );
         // await UserLocalStorage.saveUser(userCred.user!, "google");
-        }
+      }
       return userCred;
     } catch (e) {
       log("Google sign-in error: $e");
