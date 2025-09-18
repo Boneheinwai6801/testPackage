@@ -77,6 +77,7 @@ class SocialSignInPage extends StatelessWidget {
         onSignInSuccess!(authUser);
       }
     } catch (e) {
+      log("Sign-in error: $e");
       _showError(context, 'Error: $e');
     }
   }
