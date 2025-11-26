@@ -24,6 +24,7 @@ class SocialSignInPage extends StatelessWidget {
   final Color? emailTextColor;
   final Color? skipTextColor;
   final String? googleAssetIcon;
+  final String? packageName; // Add package name parameter
   final void Function(AuthUserData user)? onSignInSuccess;
 
   const SocialSignInPage({
@@ -42,7 +43,8 @@ class SocialSignInPage extends StatelessWidget {
     this.googleTextColor,
     this.emailTextColor,
     this.skipTextColor,
-    this.googleAssetIcon, // Custom Google icon asset path
+    this.googleAssetIcon,
+    this.packageName = 'social', // Default package name
     this.onSignInSuccess,
   });
 
@@ -72,12 +74,11 @@ class SocialSignInPage extends StatelessWidget {
             hideLoadingDialog(context);
             _showError(context, "Google sign-in failed: $e");
           }
-
           break;
         case 'Phone':
-          Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (_) => PhoneSignInScreen()));
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) =>  PhoneSignInScreen()),
+          );
           break;
         case 'Email':
           log("Email sign-in not implemented yet.");
@@ -98,9 +99,9 @@ class SocialSignInPage extends StatelessWidget {
   }
 
   void _showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   Widget _buildDivider() {
@@ -116,7 +117,6 @@ class SocialSignInPage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           color: Colors.white,
-          // color: Color(0xFFF0F2F5),
           child: const Text('OR', style: TextStyle(color: Colors.grey)),
         ),
       ],
@@ -150,13 +150,10 @@ class SocialSignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor:
-          backgroundColor ?? theme.colorScheme.primary, // root primary color
-
+      backgroundColor: backgroundColor ?? theme.colorScheme.primary,
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -167,14 +164,12 @@ class SocialSignInPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(height: screenHeight * 0.05),
-
                   imagelogo,
                   SizedBox(height: screenHeight * 0.25),
-
+                  
                   if (enablePhone) ...[
                     SocialButton(
                       text: 'Continue with Phone Number',
-                      // color: Colors.blueAccent,
                       color: phoneButtonColor ?? theme.colorScheme.secondary,
                       textColor: phoneTextColor ?? Colors.white,
                       icon: const Icon(Icons.phone, color: Colors.white),
@@ -187,8 +182,9 @@ class SocialSignInPage extends StatelessWidget {
                     SocialButton(
                       text: 'Sign in with Google',
                       color: googleButtonColor ?? Colors.black,
-                      assetIcon: googleAssetIcon ?? 'assets/google-removebg-preview.png',
-                      packageName: googleAssetIcon != null ? null : 'social', // Only use package name for default assets
+                      textColor: googleTextColor ?? Colors.white,
+                      assetIcon: googleAssetIcon,
+                      packageName: googleAssetIcon != null ? null : packageName,
                       onPressed: () => _onSignIn('Google', context),
                     ),
                     const SizedBox(height: 15),
@@ -198,6 +194,7 @@ class SocialSignInPage extends StatelessWidget {
                     SocialButton(
                       text: 'Continue with Email',
                       color: emailButtonColor ?? theme.colorScheme.secondary,
+                      textColor: emailTextColor ?? Colors.white,
                       icon: const Icon(Icons.email, color: Colors.white),
                       onPressed: () => _onSignIn('Email', context),
                     ),
@@ -212,13 +209,12 @@ class SocialSignInPage extends StatelessWidget {
                     const SizedBox(height: 20),
                     SocialButton(
                       text: 'Sign up later',
-
                       color: skipButtonColor ?? Colors.grey.shade300,
+                      textColor: skipTextColor ?? Colors.black,
                       icon: const Icon(
                         Icons.emoji_emotions,
                         color: Colors.black,
                       ),
-                      textColor: Colors.black,
                       onPressed: () => _onSignIn('Skip', context),
                     ),
                   ],
@@ -231,13 +227,10 @@ class SocialSignInPage extends StatelessWidget {
     );
   }
 
-  void showLoadingDialog(
-    BuildContext context, {
-    String message = "Signing in...",
-  }) {
+  void showLoadingDialog(BuildContext context, {String message = "Signing in..."}) {
     showDialog(
       context: context,
-      barrierDismissible: false, // user can't dismiss while loading
+      barrierDismissible: false,
       builder: (_) {
         return Dialog(
           backgroundColor: Colors.white,
@@ -261,7 +254,7 @@ class SocialSignInPage extends StatelessWidget {
   }
 
   void hideLoadingDialog(BuildContext context) {
-    Navigator.of(context, rootNavigator: true).pop(); // close the dialog
+    Navigator.of(context, rootNavigator: true).pop();
   }
 }
 
@@ -281,7 +274,7 @@ class SocialButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.assetIcon,
-    this.packageName, // If provided, use this for package assets
+    this.packageName,
     this.textColor = Colors.white,
   });
 
@@ -302,15 +295,25 @@ class SocialButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (icon != null) icon!,
+            // Icon/Image section
+            if (icon != null) 
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: icon!,
+              ),
+            
             if (assetIcon != null) 
-              packageName != null 
-                ? Image.asset(assetIcon!, height: 24, width: 24, package: packageName)
-                : Image.asset(assetIcon!, height: 24, width: 24), // Use asset from app
-            const SizedBox(width: 12),
-            Flexible( // Add Flexible to handle overflow
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: _buildAssetImage(),
+              ),
+            
+            // Text section
+            Expanded(
               child: Text(
                 text,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
@@ -322,5 +325,31 @@ class SocialButton extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildAssetImage() {
+    try {
+      return Image.asset(
+        assetIcon!, 
+        height: 24, 
+        width: 24, 
+        package: packageName,
+        errorBuilder: (context, error, stackTrace) {
+          // Fallback icon if image fails to load
+          return Icon(
+            Icons.account_circle, 
+            size: 24, 
+            color: textColor,
+          );
+        },
+      );
+    } catch (e) {
+      // Fallback icon if there's any error
+      return Icon(
+        Icons.account_circle, 
+        size: 24, 
+        color: textColor,
+      );
+    }
   }
 }
