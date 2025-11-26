@@ -141,11 +141,21 @@ A reusable button component that can display either an icon or an asset image:
 SocialButton(
   text: 'Continue with Google',
   color: Colors.red,
-  assetIcon: 'assets/google-icon.png',  // Optional asset icon
-  icon: Icon(Icons.phone),              // Optional material icon
+  assetIcon: 'assets/google-removebg-preview.png',  // Optional asset icon
+  packageName: 'social',                           // Package name for asset loading
+  icon: Icon(Icons.phone),                         // Optional material icon
   onPressed: () => _onSignIn('Google'),
 )
 ```
+
+**Note**: When using asset icons from this package, make sure to specify `packageName: 'social'` to ensure the assets load correctly.
+
+### Assets
+This package includes several social media icon assets:
+- `assets/google-removebg-preview.png` - Google sign-in icon
+- `assets/facebook-removebg-preview.png` - Facebook sign-in icon (not yet implemented)
+- `assets/ig-removebg-preview.png` - Instagram sign-in icon (not yet implemented)
+- `assets/mm.png` - Myanmar flag icon for phone input
 
 ## Error Handling
 

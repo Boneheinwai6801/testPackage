@@ -186,6 +186,7 @@ class SocialSignInPage extends StatelessWidget {
                       text: 'Sign in with Google',
                       color: googleButtonColor ?? Colors.black,
                       assetIcon: 'assets/google-removebg-preview.png',
+                      packageName: 'social',
                       onPressed: () => _onSignIn('Google', context),
                     ),
                     const SizedBox(height: 15),
@@ -267,6 +268,7 @@ class SocialButton extends StatelessWidget {
   final Color color;
   final Icon? icon;
   final String? assetIcon;
+  final String? packageName;
   final VoidCallback onPressed;
   final Color textColor;
 
@@ -277,6 +279,7 @@ class SocialButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.assetIcon,
+    this.packageName = 'social', // Default to the package name
     this.textColor = Colors.white,
   });
 
@@ -299,7 +302,7 @@ class SocialButton extends StatelessWidget {
           children: [
             if (icon != null) icon!,
             if (assetIcon != null)
-              Image.asset(assetIcon!, height: 24, width: 24),
+              Image.asset(assetIcon!, height: 24, width: 24, package: packageName),
             const SizedBox(width: 12),
             Text(
               text,

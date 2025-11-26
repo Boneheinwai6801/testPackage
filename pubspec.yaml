@@ -1,5 +1,5 @@
 name: social
-description: "A new Flutter package project."
+description: "A Flutter package that provides easy-to-use social authentication with Google and phone number verification. Includes a customizable sign-in UI with multiple authentication options."
 version: 0.0.1
 homepage:
 
@@ -30,3 +30,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/google-removebg-preview.png
+    - assets/facebook-removebg-preview.png
+    - assets/ig-removebg-preview.png
+    - assets/mm.png
