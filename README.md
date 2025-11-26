@@ -168,10 +168,11 @@ SocialSignInPage(
 )
 ```
 
-**Option 2: Using package assets**
+**Option 2: Using package assets (with package name)**
 ```dart
 SocialSignInPage(
-  googleAssetIcon: 'packages/social/assets/google-removebg-preview.png',
+  googleAssetIcon: 'assets/google-removebg-preview.png', // Asset name only
+  // packageName will be automatically set to 'social' in the button
   onSignInSuccess: (user) {
     // Handle sign-in
   },
@@ -179,11 +180,11 @@ SocialSignInPage(
 ```
 
 ### Assets
-This package includes several social media icon assets that you can use:
-- `packages/social/assets/google-removebg-preview.png` - Google sign-in icon
-- `packages/social/assets/facebook-removebg-preview.png` - Facebook sign-in icon (not yet implemented)
-- `packages/social/assets/ig-removebg-preview.png` - Instagram sign-in icon (not yet implemented)
-- `packages/social/assets/mm.png` - Myanmar flag icon for phone input
+This package includes several social media icon assets that you can use by setting the packageName:
+- `assets/google-removebg-preview.png` - Google sign-in icon (with packageName: 'social')
+- `assets/facebook-removebg-preview.png` - Facebook sign-in icon (not yet implemented)
+- `assets/ig-removebg-preview.png` - Instagram sign-in icon (not yet implemented)
+- `assets/mm.png` - Myanmar flag icon for phone input (not yet used)
 
 ## Error Handling
 

@@ -30,7 +30,3 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
-    - assets/google-removebg-preview.png
-    - assets/facebook-removebg-preview.png
-    - assets/ig-removebg-preview.png
-    - assets/mm.png

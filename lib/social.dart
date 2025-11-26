@@ -187,7 +187,8 @@ class SocialSignInPage extends StatelessWidget {
                     SocialButton(
                       text: 'Sign in with Google',
                       color: googleButtonColor ?? Colors.black,
-                      assetIcon: googleAssetIcon ?? 'packages/social/assets/google-removebg-preview.png',
+                      assetIcon: googleAssetIcon ?? 'assets/google-removebg-preview.png',
+                      packageName: googleAssetIcon != null ? null : 'social', // Only use package name for default assets
                       onPressed: () => _onSignIn('Google', context),
                     ),
                     const SizedBox(height: 15),
@@ -280,7 +281,7 @@ class SocialButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.assetIcon,
-    this.packageName, // No default package name to allow app assets
+    this.packageName, // If provided, use this for package assets
     this.textColor = Colors.white,
   });
 
@@ -307,12 +308,14 @@ class SocialButton extends StatelessWidget {
                 ? Image.asset(assetIcon!, height: 24, width: 24, package: packageName)
                 : Image.asset(assetIcon!, height: 24, width: 24), // Use asset from app
             const SizedBox(width: 12),
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-                color: textColor,
+            Flexible( // Add Flexible to handle overflow
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                  color: textColor,
+                ),
               ),
             ),
           ],
