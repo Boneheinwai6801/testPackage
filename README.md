@@ -141,21 +141,49 @@ A reusable button component that can display either an icon or an asset image:
 SocialButton(
   text: 'Continue with Google',
   color: Colors.red,
-  assetIcon: 'assets/google-removebg-preview.png',  // Optional asset icon
-  packageName: 'social',                           // Package name for asset loading
-  icon: Icon(Icons.phone),                         // Optional material icon
+  assetIcon: 'assets/google-icon.png',  // Path to your asset
+  icon: Icon(Icons.phone),              // Optional material icon
   onPressed: () => _onSignIn('Google'),
 )
 ```
 
-**Note**: When using asset icons from this package, make sure to specify `packageName: 'social'` to ensure the assets load correctly.
+### Using Custom Assets
+You can specify custom assets in two ways:
+
+**Option 1: Using your own project assets (recommended)**
+1. Add your icons to your project's `assets/` folder
+2. Register them in your app's `pubspec.yaml`:
+```yaml
+flutter:
+  assets:
+    - assets/google-icon.png
+```
+3. Use them in the SocialSignInPage:
+```dart
+SocialSignInPage(
+  googleAssetIcon: 'assets/google-icon.png', // Your custom asset
+  onSignInSuccess: (user) {
+    // Handle sign-in
+  },
+)
+```
+
+**Option 2: Using package assets**
+```dart
+SocialSignInPage(
+  googleAssetIcon: 'packages/social/assets/google-removebg-preview.png',
+  onSignInSuccess: (user) {
+    // Handle sign-in
+  },
+)
+```
 
 ### Assets
-This package includes several social media icon assets:
-- `assets/google-removebg-preview.png` - Google sign-in icon
-- `assets/facebook-removebg-preview.png` - Facebook sign-in icon (not yet implemented)
-- `assets/ig-removebg-preview.png` - Instagram sign-in icon (not yet implemented)
-- `assets/mm.png` - Myanmar flag icon for phone input
+This package includes several social media icon assets that you can use:
+- `packages/social/assets/google-removebg-preview.png` - Google sign-in icon
+- `packages/social/assets/facebook-removebg-preview.png` - Facebook sign-in icon (not yet implemented)
+- `packages/social/assets/ig-removebg-preview.png` - Instagram sign-in icon (not yet implemented)
+- `packages/social/assets/mm.png` - Myanmar flag icon for phone input
 
 ## Error Handling
 

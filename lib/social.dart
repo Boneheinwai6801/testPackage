@@ -23,6 +23,7 @@ class SocialSignInPage extends StatelessWidget {
   final Color? googleTextColor;
   final Color? emailTextColor;
   final Color? skipTextColor;
+  final String? googleAssetIcon;
   final void Function(AuthUserData user)? onSignInSuccess;
 
   const SocialSignInPage({
@@ -41,6 +42,7 @@ class SocialSignInPage extends StatelessWidget {
     this.googleTextColor,
     this.emailTextColor,
     this.skipTextColor,
+    this.googleAssetIcon, // Custom Google icon asset path
     this.onSignInSuccess,
   });
 
@@ -185,8 +187,7 @@ class SocialSignInPage extends StatelessWidget {
                     SocialButton(
                       text: 'Sign in with Google',
                       color: googleButtonColor ?? Colors.black,
-                      assetIcon: 'assets/google-removebg-preview.png',
-                      packageName: 'social',
+                      assetIcon: googleAssetIcon ?? 'packages/social/assets/google-removebg-preview.png',
                       onPressed: () => _onSignIn('Google', context),
                     ),
                     const SizedBox(height: 15),
@@ -279,7 +280,7 @@ class SocialButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.assetIcon,
-    this.packageName = 'social', // Default to the package name
+    this.packageName, // No default package name to allow app assets
     this.textColor = Colors.white,
   });
 
@@ -301,8 +302,10 @@ class SocialButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null) icon!,
-            if (assetIcon != null)
-              Image.asset(assetIcon!, height: 24, width: 24, package: packageName),
+            if (assetIcon != null) 
+              packageName != null 
+                ? Image.asset(assetIcon!, height: 24, width: 24, package: packageName)
+                : Image.asset(assetIcon!, height: 24, width: 24), // Use asset from app
             const SizedBox(width: 12),
             Text(
               text,
