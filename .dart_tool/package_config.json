@@ -224,6 +224,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "google_fonts",
+      "rootUri": "file:///Users/sourcecode/.pub-cache/hosted/pub.dev/google_fonts-6.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.7"
+    },
+    {
       "name": "google_identity_services_web",
       "rootUri": "file:///Users/sourcecode/.pub-cache/hosted/pub.dev/google_identity_services_web-0.3.3+1",
       "packageUri": "lib/",

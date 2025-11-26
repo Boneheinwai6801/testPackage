@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, deprecated_member_use
 
 import 'dart:developer';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social/model/model.dart';
 
@@ -47,17 +46,12 @@ class SocialSignInPage extends StatelessWidget {
 
   Future<void> _onSignIn(String platform, BuildContext context) async {
     try {
-
       AuthUserData? authUser;
 
       switch (platform) {
         case 'Google':
           try {
             showLoadingDialog(context, message: "Signing in with Google...");
-
-
-            // hide when done
-
             authUser = await AuthService().signInWithGoogle().then((userCred) {
               final user = userCred!.user;
               if (user != null) {
@@ -71,7 +65,7 @@ class SocialSignInPage extends StatelessWidget {
               }
               return null;
             });
-             hideLoadingDialog(context);
+            hideLoadingDialog(context);
           } catch (e) {
             hideLoadingDialog(context);
             _showError(context, "Google sign-in failed: $e");
@@ -92,15 +86,6 @@ class SocialSignInPage extends StatelessWidget {
         default:
           log("Other sign-in ($platform) not implemented yet.");
       }
-
-      // if (userCredential?.user != null) {
-      //   Navigator.of(context).push(
-      //     MaterialPageRoute(
-      //       builder: (_) => ProfileScreen(user: userCredential!.user!),
-      //     ),
-      //   );
-      // } else if (platform != 'Skip') {
-      // }
       if (authUser != null && onSignInSuccess != null) {
         onSignInSuccess!(authUser);
       }
@@ -167,7 +152,6 @@ class SocialSignInPage extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      // backgroundColor: Colors.white,
       backgroundColor:
           backgroundColor ?? theme.colorScheme.primary, // root primary color
 
